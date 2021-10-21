@@ -1311,6 +1311,58 @@ while (i - queue.peek()[1] >= k)
     queue.poll();
 ```
 
+## [764. Largest Plus Sign](https://leetcode.com/problems/largest-plus-sign/)
+
+![](https://markpersonal.oss-us-east-1.aliyuncs.com/pic/20210909121311.png)
+
+dp:
+1. init a 3d array to store 4 directions' info
+   1. `dp[i][j][0]`
+   2. `dp`
+
+
+```java
+class Solution {
+    public int orderOfLargestPlusSign(int n, int[][] mines) {
+        int res = 0;
+        int[][][] dp = new int[n][n][4];
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                for(int k = 0; k < 4; k++){
+                    dp[i][j][k] = 1;
+                }
+            }
+        }
+        for(int[] z : mines){
+            for(int k = 0; k < 4; k++){
+                dp[z[0]][z[1]][k] = 0;               
+            }
+        }
+        for(int i = 1; i < n; i++){
+            for(int j = 1; j < n; j++){
+                if(dp[i][j][0] == 0) continue;
+                dp[i][j][0] = 1 + dp[i][j - 1][0];
+                dp[i][j][1] = 1 + dp[i - 1][j][1];
+            }
+        }
+        for(int i = n - 2; i >= 0; i--){
+            for(int j = n - 2; j >= 0; j--){
+                if(dp[i][j][2] == 0) continue;
+                dp[i][j][2] = 1 + dp[i][j + 1][2];
+                dp[i][j][3] = 1 + dp[i + 1][j][3];
+            }
+        }
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                int cur = Math.min(Math.min(dp[i][j][0], dp[i][j][1]), Math.min(dp[i][j][2], dp[i][j][3]));
+                res = Math.max(res, cur);
+            }
+        }
+        return res;
+    }
+}
+```
+
 # BackTrack
 
 Sometimes we do not have the obvious revoke step, how can it be called "backtracking" ?
@@ -3582,6 +3634,64 @@ while queue 非空：
                 queue.push(m)
 ```
 
+## [111. Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree/)
+```java
+class Solution {
+    public int minDepth(TreeNode root) {
+        if(root == null){
+            return 0;
+        }
+        int res = 1;
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.addLast(root);
+        while(!deque.isEmpty()){
+            int size = deque.size();
+            for(int i = 0; i < size; i++){
+                TreeNode cur = deque.removeFirst();
+                if(cur.left != null){
+                    deque.addLast(cur.left);
+                }
+                if(cur.right != null){
+                    deque.addLast(cur.right);
+                }
+                if(cur.left == null && cur.right == null){
+                    return res;
+                }
+            }
+            res++;
+        }
+        return res;
+    }
+}
+```
+
+## [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
+```java
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        if(root != null){
+            deque.addLast(root);
+        }
+        while(!deque.isEmpty()){
+            List<Integer> path = new ArrayList<>();
+            int size = deque.size();
+            for(int i = 0; i < size; i++){
+                TreeNode tmp = deque.removeFirst();
+                path.add(tmp.val);
+                if(tmp.left != null) deque.addLast(tmp.left);
+                if(tmp.right != null) deque.addLast(tmp.right);              
+            }
+            res.add(path);
+        }
+        return res;
+    }
+}
+```
+
+
+
 ## 994 Rotting Oranges
 
 In a given grid, each cell can have one of three values:
@@ -3866,6 +3976,21 @@ class Solution {
 ![](https://markpersonal.oss-us-east-1.aliyuncs.com/pic/20210726185406.png)
 
 
+## [215. Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+
+Given an integer array nums and an integer k, return the kth largest element in the array.
+
+Note that it is the kth largest element in the sorted order, not the kth distinct element.
+
+**Example 1:**
+
+    Input: nums = [3,2,1,5,6,4], k = 2
+    Output: 5
+
+**Example 2:**
+
+    Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
+    Output: 4
 ## [Closest Pair of Points using Divide and Conquer algorithm](https://www.geeksforgeeks.org/closest-pair-of-points-using-divide-and-conquer-algorithm/)
 
 We are given an array of n points in the plane, and the problem is to find out the closest pair of points in the array. This problem arises in a number of applications. For example, in air-traffic control, you may want to monitor planes that come too close together, since this may indicate a possible collision. Recall the following formula for distance between two points p and q.
@@ -4071,6 +4196,57 @@ public class GFG {
 // This code is contributed by Pradip Basak
 
 
+```
+## [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
+
+You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+
+Merge all the linked-lists into one sorted linked-list and return it.
+
+**Example 1:**
+
+    Input: lists = [[1,4,5],[1,3,4],[2,6]]
+    Output: [1,1,2,3,4,4,5,6]
+    Explanation: The linked-lists are:
+    [
+        1->4->5,
+        1->3->4,
+        2->6
+    ]
+    merging them into one sorted list:
+    1->1->2->3->4->4->5->6
+
+
+```java
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        return partion(lists, 0, lists.length - 1);
+        
+    }
+    private ListNode partion(ListNode[] lists, int start, int end){
+        if(start == end){
+            return lists[start];
+        }
+        if(start < end){
+            int mid = start + (end - start) / 2;
+            ListNode l1 = partion(lists, start, mid);
+            ListNode l2 = partion(lists, mid + 1, end);
+            return merge(l1, l2);
+        }
+        return null;
+    }
+    private ListNode merge(ListNode l1, ListNode l2){
+        if(l1 == null) return l2;
+        if(l2 == null) return l1;
+        if(l1.val < l2.val){
+            l1.next = merge(l1.next, l2);
+            return l1;
+        }else{
+            l2.next = merge(l2.next, l1);
+            return l2;
+        }
+    }
+}
 ```
 # Topological Sorting
 
@@ -9511,6 +9687,251 @@ class Solution {
             res.add(cand2);
         }
         return res;
+    }
+}
+```
+
+# Jump Game
+
+## [55. Jump Game](https://leetcode.com/problems/jump-game/)
+
+You are given an integer array nums. You are initially positioned at the array's first index, and each element in the array represents your maximum jump length at that position.
+
+Return true if you can reach the last index, or false otherwise.
+
+
+**Example 1:**
+
+    Input: nums = [2,3,1,1,4]
+    Output: true
+    Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
+
+Greedy:
+
+- init maxDis, which means the maxmium distance we could reach
+- determine that cur index <= maxDis, if not, means we could not reach
+
+```java
+class Solution {
+    public boolean canJump(int[] nums) {
+        int maxDis = 0;
+        for(int i = 0; i < nums.length; i++){
+            if(i <= maxDis){
+                maxDis = Math.max(maxDis, i + nums[i]);
+            }
+        }
+        return maxDis >= nums.length - 1;
+    }
+}
+```
+
+DP:
+
+```java
+class Solution {
+    public boolean canJump(int[] nums) {
+        boolean[] dp = new boolean[nums.length];
+        dp[0] = true;
+        
+        for(int i = 1; i < nums.length; i++){
+            dp[i] = false;
+            for(int j = 0; j < i; j++){
+                if(dp[j] && j + nums[j] >= i){
+                    dp[i] = true;
+                }
+            }
+        }
+        return dp[nums.length - 1];
+    }
+}
+```
+
+
+
+```java
+char[] arr = string.toCharArray();
+Set<Character> set = new HashSet<>();
+List<Character> list = new ArrayList<>();
+for(char c : arr){
+    if(set.add(c)){
+        list.add(c);
+    }else{
+        list.remove(c);
+    }
+}
+
+```
+
+# Word Break
+## [139. Word Break](https://leetcode.com/problems/word-break/)
+
+Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
+
+Note that the same word in the dictionary may be reused multiple times in the segmentation.
+
+**Example 1:**
+
+    Input: s = "leetcode", wordDict = ["leet","code"]
+    Output: true
+    Explanation: Return true because "leetcode" can be segmented as "leet code".
+
+simple dp question for this problem, init a set to store all the words to prevent duplication and check if cur word has been visted. 
+init a boolean array as dp array to store dp status, then double loop to iterate the s string: `dp[j] && wordList.contains(s.substring(j, i))`
+
+
+```java
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> wordList = new HashSet<>(wordDict);
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        
+        for(int i = 1; i <= s.length(); i++){
+            for(int j = 0; j <= i; j++){
+                if(dp[j] && wordList.contains(s.substring(j, i))){
+                    dp[i] = true;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
+```
+
+## [140. Word Break II](https://leetcode.com/problems/word-break-ii/)
+Given a string s and a dictionary of strings wordDict, add spaces in s to construct a sentence where each word is a valid dictionary word. Return all such possible sentences in any order.
+
+Note that the same word in the dictionary may be reused multiple times in the segmentation.
+
+ 
+**Example 1:**
+
+    Input: s = "catsanddog", wordDict = ["cat","cats","and","sand","dog"]
+    Output: ["cats and dog","cat sand dog"]
+
+
+dp to check if there is a valid answer, then use backtrack to find out all the possible result
+
+```java
+class Solution {
+    List<String> res;
+    Set<String> wordList;
+    boolean[] dp;
+    Deque<String> deque;
+    public List<String> wordBreak(String s, List<String> wordDict) {
+        wordList = new HashSet<>(wordDict);
+        dp = new boolean[s.length() + 1];
+        res = new ArrayList<>();
+        deque = new ArrayDeque<>();
+        dp[0] = true;
+        for(int i = 1; i <= s.length(); i++){
+            for(int j = 0; j < i; j++){
+                if(dp[j] && wordList.contains(s.substring(j, i))){
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        if(dp[s.length()]){
+            dfs(s, s.length());
+            return res;
+        }
+        return res;
+    }
+    private void dfs(String s, int index){
+        if(index == 0){
+            res.add(String.join(" ", deque));
+            return;
+        }
+        for(int i = index - 1; i >= 0; i--){
+            if(dp[i] && wordList.contains(s.substring(i, index))){
+                deque.addFirst(s.substring(i, index));
+                dfs(s, i);
+                deque.removeFirst();
+            }
+        }
+    }
+}
+```
+# linkedList
+## [138. Copy List with Random Pointer](https://leetcode.com/problems/copy-list-with-random-pointer/)
+
+![](https://markpersonal.oss-us-east-1.aliyuncs.com/pic/20211018171405.png)
+
+O(n) space complexity
+
+init a map to store the realaitonship between old node and new node;
+then just traverse all the node -> creat link between new nodes
+
+```java
+class Solution {
+    public Node copyRandomList(Node head) {
+        Map<Node, Node> map = new HashMap<>();
+        Node cur = head;
+        while(cur != null){
+            Node newNode = new Node(cur.val);
+            map.put(cur, newNode);
+            cur = cur.next;
+        }
+        
+        cur = head;
+        while(cur != null){
+            Node newNode = map.get(cur);
+            if(cur.next != null){
+                newNode.next = map.get(cur.next);
+            }
+            if(cur.random != null){
+                newNode.random = map.get(cur.random);
+            }
+            cur = cur.next;
+        }
+        return map.get(head);
+    }
+}
+```
+
+O(1) space complexity
+
+creat new node which just follows the old node:   1 - 1. - 2 - 2. - 3 - 3. - 4 - 4.
+
+then create the link between new node
+
+then just seperate old nodes and new nodes
+
+
+```java
+class Solution {
+    public Node copyRandomList(Node head) {
+        if(head == null){
+            return head;
+        }
+        Node p = head;
+        while(p != null){
+            Node newNode = new Node(p.val);
+            newNode.next = p.next;
+            p.next = newNode;
+            p = newNode.next;
+        }
+        p = head;
+        
+        while(p != null){
+            if(p.random != null){
+                p.next.random = p.random.next;
+            }
+           p = p.next.next;
+        }
+        p = head;
+        Node dummy = new Node(-1);
+        Node cur = dummy;
+
+        while(p != null){
+            cur.next = p.next;
+            cur = cur.next;
+            p.next = cur.next;
+            p = p.next;
+        }
+        
+        return dummy.next;
     }
 }
 ```

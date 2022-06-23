@@ -1,54 +1,4 @@
-
-
 # Attention
-
-## 注意事项
-
-- [刷题需要注意的小细节](LeetCode-Attention.md)
-
-## 需要注意的一些 API
-
-### java.lang.Character.isLetterOrDigit(int codePoint)
-
-确定指定字符 (Unicode 代码点）是一个字母或数字。
-字符被确定是字母或数字，如果不是 isLetter(codePoint) 也不是 isDigit(codePoint) 的字符，则返回 true。
-
-### getOrDefault(Object key, V defaultValue)
-
-Returns the value to which the specified key is mapped, or defaultValue if this map contains no mapping for the key.
-
-### Character.toLowerCase
-
-### Map.Entry<K,V>
-
-A map entry (key-value pair). The Map.entrySet method returns a collection-view of the map, whose elements are of this class. The only way to obtain a reference to a map entry is from the iterator of this collection-view. These Map.Entry objects are valid only for the duration of the iteration; more formally, the behavior of a map entry is undefined if the backing map has been modified after the entry was returned by the iterator, except through the setValue operation on the map entry.
-
-### List 转数组
-
-使用 toArray() 方法
-需要特别注意，不能这样写：
-
-```java
-ArrayList<String> list=new ArrayList<String>();
-String strings[]=(String [])list.toArray();
-```
-
-这样写编译没有什么问题，但是运行时会报 ClassCastException，这是因为 Java 中允许向上和向下转型，但是这个转型是否成功是根据 Java 虚拟机中这个对象的类型来实现的。Java 虚拟机中保存了每个对象的类型。而数组也是一个对象。数组的类型是 java.lang.Object。把 java.lang.Object 转换成 java.lang.String 是显然不可能的事情，因为这里是一个向下转型，而虚拟机只保存了这是一个 Object 的数组，不能保证数组中的元素是 String 的，所以这个转型不能成功。数组里面的元素只是元素的引用，不是存储的具体元素，所以数组中元素的类型还是保存在 Java 虚拟机中的。
-
-因此正确的方法是这样的：
-
-```java
-//要转换的 list 集合
-List<String> testList = new ArrayList<String>(){{add("aa");add("bb");add("cc");}};
-
-//使用 toArray(T[] a) 方法
-String[] array2 = testList.toArray(new String[testList.size()]);
-
-//打印该数组
-for(int i = 0; i < array2.length; i++){
-    System.out.println(array2[i]);
-}
-```
 
 ## 2 Add Two Numbers
 
@@ -5493,22 +5443,24 @@ The largest rectangle is shown in the red area, which has an area = 10 units.
 
 ```java
 class Solution {
+    // 递增栈，stack里面存的是递增的column的index，每次取width，都是当前index - 1 - 最当前的stack的index.peek()
     public int largestRectangleArea(int[] heights) {
         Deque<Integer> deque = new ArrayDeque<>();
         int res = 0;
         int n = heights.length;
+        deque.addLast(-1);
         for(int i = 0; i < n; i++){
-            while(!deque.isEmpty() && heights[i] <= heights[deque.peekLast()]){
-                int pre = heights[deque.removeLast()];
-                int width = i - (deque.isEmpty() ? 0 : deque.peekLast() + 1);
-                res = Math.max(res, pre * width);
+            while(deque.peekLast() != -1 && heights[i] <= heights[deque.peekLast()]){
+                int preHeight = heights[deque.removeLast()];
+                int width = i - deque.peekLast() - 1;
+                res = Math.max(preHeight * width, res);
             }
             deque.addLast(i);
         }
-        while(!deque.isEmpty()){
-            int pre = heights[deque.removeLast()];
-            int width = heights.length - (deque.isEmpty() ? 0 : deque.peekLast() + 1);
-            res = Math.max(res, pre * width);
+        while(deque.peekLast() != -1){
+            int preHeight = heights[deque.removeLast()];
+            int width = n - deque.peekLast() - 1;
+            res = Math.max(preHeight * width, res);
         }
         return res;
     }
@@ -5536,10 +5488,10 @@ class Solution {
 
 模版如下：
 
-1. **去尾操作：队尾元素出队列。**当队列有新元素待入队，需要从队尾开始，删除影响队列单调性的元素，维护队列的单调性。（删除一个队尾元素后，就重新判断新的队尾元素）
+1. **去尾操作：队尾元素出队列。** 当队列有新元素待入队，需要从队尾开始，删除影响队列单调性的元素，维护队列的单调性。（删除一个队尾元素后，就重新判断新的队尾元素）
 2. 去尾操作结束后，将该新元素重新入队列
-3. **删头操作：队头元素出队列。**判断队头元素是否在待求解的区间之内，如果不在，就将其删除。（这个很好理解，因为单调队列的队头元素就是待求解区间的极值）
-4. **取解操作：**经过上面两个操作，取出**队列的头元素**，就是**当前区间的极值**。
+3. **删头操作：队头元素出队列。** 判断队头元素是否在待求解的区间之内，如果不在，就将其删除。（这个很好理解，因为单调队列的队头元素就是待求解区间的极值）
+4. **取解操作：** 经过上面两个操作，取出**队列的头元素**，就是**当前区间的极值**。
 
 ## [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum/)
 

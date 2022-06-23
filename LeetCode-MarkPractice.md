@@ -5312,6 +5312,39 @@ class Solution {
     }
 }
 ```
+
+## [503. Next Greater Element II](https://leetcode.com/problems/next-greater-element-ii/)
+Given a circular integer array nums (i.e., the next element of nums[nums.length - 1] is nums[0]), return the next greater number for every element in nums.
+
+The next greater number of a number x is the first greater number to its traversing-order next in the array, which means you could search circularly to find its next greater number. If it doesn't exist, return -1 for this number.
+
+**Example 1:**
+
+    Input: nums = [1,2,1]
+    Output: [2,-1,2]
+    Explanation: The first 1's next greater number is 2; 
+    The number 2 can't find next greater number. 
+    The second 1's next greater number needs to search circularly, which is also 2.
+
+```java
+class Solution {
+    public int[] nextGreaterElements(int[] nums) {
+        Deque<Integer> deque = new ArrayDeque<>();
+        int n = nums.length;
+        int[] res = new int[n];
+        for(int i = 2 * n - 1; i >= 0; i--){
+            while(!deque.isEmpty() && nums[i % n] >= nums[deque.peekLast()]){
+                deque.removeLast();
+            }
+            res[i % n] = deque.isEmpty() ? -1 : nums[deque.peekLast()];
+            deque.addLast(i % n);
+        }
+        return res;
+    }
+}
+```
+
+
 ## [316. Remove Duplicate Letters](https://leetcode.com/problems/remove-duplicate-letters/)
 
 > Same as Leetcode [1081. Smallest Subsequence of Distinct Characters](https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/)
@@ -5421,8 +5454,8 @@ Explanation: The above elevation map (black section) is represented by array [0,
 - 单调栈解法，首先一直往栈里压墙的高度，只有高度从低变高的时候我们才需要计算储水，高度递减的时候我们不需要管，因为这时候不储存水量
 - 如果当前高度大于栈顶的高度，我们先pop出栈顶的元素保存起来，这个是我们的水池底部
 - 如果这时候栈空了，直接break，因为没有左边的墙了，此时蓄不住水
-- 求出当前水池最矮的墙`Math.min(height[deque.peekLast()], height[i])`，
-- 高度*长度求出当前level的蓄水量，循环往复
+- 求出当前水池最矮的墙 `Math.min(height[deque.peekLast()], height[i])`，
+- 高度 * 长度求出当前level的蓄水量，循环往复
 - 不要忘记往栈里压入当前墙
 
 ```java
@@ -5433,8 +5466,8 @@ class Solution {
         int res = 0;
         for(int i = 0; i < n; i++){
             while(!deque.isEmpty() && height[i] > height[deque.peekLast()]){
-                int pre = deque.removeLast();
-                if(deque.isEmpty()) break;
+                int pre = deque.removeLast();//湖底高度
+                if(deque.isEmpty()) break; //没左墙壁了无法储水
                 int minHeight = Math.min(height[deque.peekLast()], height[i]);
                 res += (minHeight - height[pre]) * (i - deque.peekLast() - 1);
             }

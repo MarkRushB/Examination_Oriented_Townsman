@@ -5245,6 +5245,33 @@ private static int[] nextGreaterElement(int[] nums){
     return res;
 }
 ```
+## [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
+
+Given an array of integers temperatures represents the daily temperatures, return an array answer such that answer[i] is the number of days you have to wait after the ith day to get a warmer temperature. If there is no future day for which this is possible, keep answer[i] == 0 instead.
+
+**Example 1:**
+
+    Input: temperatures = [73,74,75,71,69,72,76,73]
+    Output: [1,1,4,2,1,1,0,0]
+
+```java
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        Deque<Integer> deque = new ArrayDeque<>();
+        int[] res = new int[temperatures.length];
+        int n = temperatures.length;
+        for(int i = n - 1; i >= 0; i--){
+            while(!deque.isEmpty() && temperatures[i] >= temperatures[deque.peekLast()]){
+                deque.removeLast();
+            }
+            res[i] = deque.isEmpty() ? 0 : deque.peekLast() - i;
+            deque.addLast(i);
+        }
+        return res;
+    }
+}
+```
+
 ## [496. Next Greater Element I](https://leetcode.com/problems/next-greater-element-i/)
 
 The next greater element of some element x in an array is the first greater element that is to the right of x in the same array.

@@ -7709,11 +7709,8 @@ public class Solution {
             list.add(new int[]{pair.start,1});//起飞的时候+1
             list.add(new int[]{pair.end,-1});//降落的时候-1
         }
-        Collections.sort(list,(x,y)->{
-            //此处确保降落(-1)排在起飞(1)之前
-            if(x[0]==y[0]) return x[1]-y[1];
-            return x[0]-y[0];
-        });
+        //此处确保降落(-1)排在起飞(1)之前
+        Collections.sort(list, (x, y) -> x[0] == y[0] ? x[1] - y[1] : x[0] - y[0])
         int count=0,max = 0;
         for(int[] pair:list){
             count += pair[1];

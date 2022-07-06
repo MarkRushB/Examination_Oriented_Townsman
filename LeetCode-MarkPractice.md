@@ -2606,36 +2606,35 @@ Output: true
 
 ```java
 class Solution {
-    int m;
     int n;
-    int[][] dir = {{1, 0},{-1 ,0},{0, 1},{0, -1}};
+    int m;
+    int[][] dir = {{1, 0},{-1, 0},{0, 1},{0, -1}};
     public boolean exist(char[][] board, String word) {
-        m = board.length;
-        n = board[0].length;
-        for(int i = 0; i < m; i++){
-            for(int j = 0; j < n; j++){
-                if(dfs(board, i, j, 0, word)){
-                    return true;
+        n = board.length;
+        m = board[0].length;
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < m; j++){
+                if(board[i][j] == word.charAt(0)){
+                    if(help(board, i, j, 0, word)){
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
-    private boolean dfs(char[][] board, int x, int y, int index, String word){
+    private boolean help(char[][] board, int x, int y, int index, String word){
         if(index == word.length()){
             return true;
         }
-        if(x < 0 || x > m - 1 || y < 0 || y > n - 1){
-            return false;
-        }
-        if(board[x][y] == '*' || board[x][y] != word.charAt(index)){
+        if(x < 0 || x > n - 1 || y < 0 || y > m - 1 || board[x][y] == '*' || board[x][y] != word.charAt(index)){
             return false;
         }
         board[x][y] = '*';
         for(int[] d : dir){
             int nx = x + d[0];
             int ny = y + d[1];
-            if(dfs(board, nx, ny, index + 1, word)){
+            if(help(board, nx, ny, index + 1, word)){
                 return true;
             }
         }

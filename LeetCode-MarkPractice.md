@@ -208,6 +208,7 @@ Implementation the `MyCircularQueue` class:
 You must solve the problem without using the built-in queue data structure in your programming language. 
 
 - 全程只用一个size去判断queue的尺寸，不用管front和rear
+
 ```java
 class MyCircularQueue {
     int[] queue;
@@ -249,6 +250,8 @@ class MyCircularQueue {
     }
     
     public int Rear() {
+        // 这里为什么要对rear == 0做一个判断呢？是因为我们rear的变化是在入列后，所以此时队尾元素应该是rear - 1
+        // 那为什么front的时候不用管呢？因为出列相当于删除了队首元素，然后front后移，这时候front对应的正好是当前队首元素
         return size == 0 ? -1 : queue[rear == 0 ? k - 1 : rear - 1];
     }
     

@@ -197,16 +197,81 @@ One of the benefits of the circular queue is that we can make use of the spaces 
 
 Implementation the `MyCircularQueue` class:
 
-- MyCircularQueue(k) Initializes the object with the size of the queue to be k.
-- int Front() Gets the front item from the queue. If the queue is empty, return -1.
-- int Rear() Gets the last item from the queue. If the queue is empty, return -1.
-- boolean enQueue(int value) Inserts an element into the circular queue. Return true if the operation is successful.
-- boolean deQueue() Deletes an element from the circular queue. Return true if the operation is successful.
-- boolean isEmpty() Checks whether the circular queue is empty or not.
-- boolean isFull() Checks whether the circular queue is full or not.
+- `MyCircularQueue(k)` Initializes the object with the size of the queue to be k.
+- `int Front()` Gets the front item from the queue. If the queue is empty, return -1.
+- `int Rear()` Gets the last item from the queue. If the queue is empty, return -1.
+- `boolean enQueue(int value)` Inserts an element into the circular queue. Return true if the operation is successful.
+- `boolean deQueue()` Deletes an element from the circular queue. Return true if the operation is successful.
+- `boolean isEmpty()` Checks whether the circular queue is empty or not.
+- `boolean isFull()` Checks whether the circular queue is full or not.
 
 You must solve the problem without using the built-in queue data structure in your programming language. 
 
+- 全程只用一个size去判断queue的尺寸，不用管front和rear
+```java
+class MyCircularQueue {
+    int[] queue;
+    int front;
+    int rear;
+    int k;
+    int size;
+    public MyCircularQueue(int k) {
+        queue = new int[k];
+        front = 0;
+        rear = 0;
+        this.k = k;
+        size = 0;
+    }
+    
+    public boolean enQueue(int value) {
+        if(size == k){
+            return false;
+        }
+        queue[rear++] = value;
+        rear %= k;
+        size++;
+        return true;
+        
+    }
+    
+    public boolean deQueue() {
+        if(size == 0){
+            return false;
+        }
+        front++;
+        front %= k;
+        size--;
+        return true;
+    }
+    
+    public int Front() {
+        return size == 0 ? -1 : queue[front];
+    }
+    
+    public int Rear() {
+        return size == 0 ? -1 : queue[rear == 0 ? k - 1 : rear - 1];
+    }
+    
+    public boolean isEmpty() {
+        return size == 0;
+    }
+    
+    public boolean isFull() {
+        return size == k;
+    }
+}
+
+/**
+ * Your MyCircularQueue object will be instantiated and called as such:
+ * MyCircularQueue obj = new MyCircularQueue(k);
+ * boolean param_1 = obj.enQueue(value);
+ * boolean param_2 = obj.deQueue();
+ * int param_3 = obj.Front();
+ * int param_4 = obj.Rear();
+ * boolean param_5 = obj.isEmpty();
+ * boolean param_6 = obj.isFull();
+ */
+```
 
 # TreeMaps
 

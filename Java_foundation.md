@@ -1,6 +1,13 @@
 - [Why Coinbase](#why-coinbase)
 - [What can you bring for our company](#what-can-you-bring-for-our-company)
 - [Self Introduction](#self-introduction)
+- [Network](#network)
+  - [Public IP vs Private IP](#public-ip-vs-private-ip)
+  - [subnet mask](#subnet-mask)
+  - [HTTPS vs HTTP](#https-vs-http)
+  - [TCP 3-way handshaking](#tcp-3-way-handshaking)
+  - [NAT](#nat)
+  - [What happens when you enter google.com in the web browser?](#what-happens-when-you-enter-googlecom-in-the-web-browser)
 - [Java](#java)
   - [Java’s Feature](#javas-feature)
   - [OOP 3 features](#oop-3-features)
@@ -56,36 +63,22 @@
     - [IOC](#ioc)
     - [AOP](#aop)
 - [Database](#database)
+  - [MongoDB?](#mongodb)
+  - [What is DynamoDB?](#what-is-dynamodb)
+  - [Diff between MongoDb and DynamoDB](#diff-between-mongodb-and-dynamodb)
+    - [platform:](#platform)
+    - [configuration](#configuration)
+    - [Querying data & indexes](#querying-data--indexes)
   - [Normal form](#normal-form)
     - [1NF (First Normal Form) Rules](#1nf-first-normal-form-rules)
     - [2NF (Second Normal Form) Rules](#2nf-second-normal-form-rules)
     - [3NF (Third Normal Form) Rules](#3nf-third-normal-form-rules)
 - [Resume:](#resume)
+  - [Coinbase](#coinbase)
   - [Cmind Ai:](#cmind-ai)
   - [Awesome Rush B:](#awesome-rush-b)
   - [Online Pet Adoption Platform](#online-pet-adoption-platform)
   - [Automated data analytics report process:](#automated-data-analytics-report-process)
-- [说说这几个月work on了什么project:](#说说这几个月work-on了什么project)
-- [Company Research](#company-research)
-  - [IronClad:](#ironclad)
-  - [IntelyCare:](#intelycare)
-- [Stock market forecasting multi-processing](#stock-market-forecasting-multi-processing)
-- [Miss deadline_Couldn’t finish tasks before deadline](#miss-deadline_couldnt-finish-tasks-before-deadline)
-- [Customer didn’t require but like it / beyond expectation](#customer-didnt-require-but-like-it--beyond-expectation)
-- [News sort speed in Cmind](#news-sort-speed-in-cmind)
-- [NEU Project arrangement](#neu-project-arrangement)
-- [Data Science course import package](#data-science-course-import-package)
-- [Lots of deadlines](#lots-of-deadlines)
-- [Most frequently searched keywords](#most-frequently-searched-keywords)
-- [Help intern debug (date sort problem)](#help-intern-debug-date-sort-problem)
-- [Design complicated Email notification function](#design-complicated-email-notification-function)
-- [Cmind news trending 太多lines在chart里，客户不喜欢](#cmind-news-trending-太多lines在chart里客户不喜欢)
-- [Conflict with teammate](#conflict-with-teammate)
-- [Figma for personal Project AwesomeRushB](#figma-for-personal-project-awesomerushb)
-- [Use New York Times API to get more training data (news heading)](#use-new-york-times-api-to-get-more-training-data-news-heading)
-- [Learn react for the internship](#learn-react-for-the-internship)
-- [Web Tools project’s searching feature should have a autocomplete function](#web-tools-projects-searching-feature-should-have-a-autocomplete-function)
-- [AwesomeRushB Author Editor develop](#awesomerushb-author-editor-develop)
 
 
 ## Why Coinbase
@@ -120,6 +113,45 @@ My undergraduate major is Management Information System, so there were some cour
 **Visa**: Expiration Date: June 18, 2024
 
 **I20**: Dec, 20, 2021
+
+## Network
+### Public IP vs Private IP
+Private IP address of a system is the IP address that is used to communicate within the same network. Using private IP data or information can be sent or received within the same network. 
+
+Public IP address of a system is the IP address that is used to communicate outside the network. A public IP address is basically assigned by the ISP (Internet Service Provider). 
+
+![](https://markpersonal.oss-us-east-1.aliyuncs.com/pic/20220710222655.png)
+
+### subnet mask
+A subnet mask defines the range of IP addresses that can be used within a network or subnet. It also separates an IP address into two parts: network bits and host bits.
+
+### HTTPS vs HTTP
+HyperText Transfer Protocol
+
+HTTPS is HTTP with encryption. The difference between the two protocols is that HTTPS uses TLS (SSL) to encrypt normal HTTP requests and responses. As a result, HTTPS is far more secure than HTTP. A website that uses HTTP has HTTP:// in its URL, while a website that uses HTTPS has HTTPS://.
+
+![](https://markpersonal.oss-us-east-1.aliyuncs.com/pic/20220710223741.png)
+
+### TCP 3-way handshaking
+- Step 1 (SYN): In the first step, the client wants to establish a connection with a server, so it sends a segment with SYN(Synchronize Sequence Number) which informs the server that the client is likely to start communication and with what sequence number it starts segments with
+- Step 2 (SYN + ACK): Server responds to the client request with SYN-ACK signal bits set. Acknowledgement(ACK) signifies the response of the segment it received and SYN signifies with what sequence number it is likely to start the segments with
+- Step 3 (ACK): In the final part client acknowledges the response of the server and they both establish a reliable connection with which they will start the actual data transfer
+
+### NAT
+NAT stands for network address translation. It’s a way to map multiple local private addresses to a public one before transferring the information. 
+
+### What happens when you enter google.com in the web browser?
+Below are the steps that are being followed:
+
+- **Check the browser cache** first if the content is fresh and present in cache display the same.
+- If not, the browser checks if the IP of the URL is present in the cache (browser and OS) if not then **request the OS to do a DNS lookup using UDP to get the corresponding IP address of the URL from the DNS server to establish a new TCP connection**.
+- A new TCP connection is set between the browser and the server using three-way handshaking.
+- An HTTP request is sent to the server using the TCP connection.
+- The web servers running on the Servers handle the incoming HTTP request and send the HTTP response.
+- The browser process the HTTP response sent by the server and may close the TCP connection or reuse the same for future requests.
+- If the response data is cacheable then browsers cache the same.
+- Browser decodes the response and renders the content.
+
 
 ## Java
 ### Java’s Feature
@@ -512,6 +544,85 @@ AOP breaks the program logic into distinct parts (called concerns). It is used t
 A **cross-cutting concern** is a concern that can affect the whole application and should be centralized in one location in code as possible, such as transaction management, authentication, logging, security etc.
 
 ## Database
+
+### RDBMS vs. NoSQL
+In choosing between SQL vs. NoSQL, you’ll need to think about what your data looks like, how you’ll query it, and your scalability needs.
+
+#### Data structure
+SQL: data -> primarily structured
+A SQL database is a great fit for **transaction-oriented systems such as customer relationship management tools, accounting software, and e-commerce platforms**
+
+Each row in a SQL database is a distinct entity (e.g. a customer), and each column is an attribute that describes that entity (e.g. address, job title, item purchased, etc.).
+
+need ACID compliance. 
+- Atomicity – each transaction either succeeds completely or is fully rolled back.
+- Consistency – data written to a database must be valid according to all defined rules.
+- Isolation – When transactions are run concurrently, they do not contend with each other, and act as if they were being run sequentially.
+- Durability – Once a transaction has been committed to the database, it is considered permanent, even in the event of a system failure.
+
+NoSQL: data requirements aren’t clear or data is unstructured
+A NoSQL database is a much better fit to store data like **article content, social media posts, sensor data, and other types of unstructured data that won’t fit neatly into a table**. 
+NoSQL databases were built with flexibility and scalability in mind, and follows the BASE consistency model, which means:
+
+The data you store in a NoSQL database does not need a predefined schema like you do for a SQL database. Rather, the data can be column stores, document-oriented, graph-based, or key-value pairs. This provides much more flexibility and less upfront planning when managing your database.
+
+#### Ability to query data
+The next factor to consider is 
+- how often you’ll query your data
+- how quickly you need to run queries
+- who will be responsible for running these queries.
+
+SQL is a popular programming language that has been around for over 45 years, so it’s extremely mature and well-known. It efficiently executes queries and retrieves and edits data quickly.
+
+When NoSQL database technology was being built, developers focused on scalability and flexibility, not query efficiency.
+
+Querying NoSQL databases typically requires developers or data scientists, which will be more costly and less efficient.
+
+#### Scaling
+**SQL databases scale vertically**, meaning you’ll need to increase the capacity of a single server (increasing CPU, RAM, or SSD) to scale your database. SQL databases were designed to run on a single server to maintain the integrity of the data, so they’re not easy to scale.
+
+**NoSQL databases scale horizontally**, meaning you can add more servers to power your growing database. This is a huge advantage that NoSQL has over SQL.
+
+
+### MongoDB?
+MongoDB is a general-purpose, document-based distributed NoSQL database.
+
+|MongoDB|RDBMS Counterpart|Description|
+|:-:|:-:|:-:|
+|Collection|Table|A set of MongoDB documents.
+|Document|Row|Collection of data stored in BSON format
+|Field|Field/Column|A single element in a MongoDB document containing values as field and value pairs
+
+### What is DynamoDB?
+DynamoDB is a proprietary NoSQL database by Amazon that supports key-value and document data offered via the Amazon Web Services.
+
+
+|DynamoDB|RDBMS Counterpart|Description
+|:-:|:-:|:-:|
+|Table|Table|A grouped collection of DynamoDB Items.
+Item|Row|Data records that contain data. Each item consists of one or more attributes.
+Attribute|Field/Column|The base element of DynamoDB contains a single data value.
+
+### Diff between MongoDb and DynamoDB
+#### platform:
+MongoDB is platform-agnostic.
+DynamoDB is limited to AWS.
+#### configuration
+MongoDb -> need complex configuration
+DynamoDb -> DynamoDB is a fully managed database that allows users to start using the database straightaway, as AWS will manage all the scaling, availability, and updates. 
+
+#### Querying data & indexes
+MongoDB offers more flexibility in querying data as it enables users to aggregate and query data natively in multiple ways, such as:
+
+- Single keys
+- Ranges
+- Graph traversals
+- JOINs
+
+DynamoDB:
+- DynamoDB natively supports only key-value querie
+
+
 ### Normal form
 Normalization is a database design technique that reduces data redundancy and eliminates undesirable characteristics
 
